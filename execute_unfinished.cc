@@ -33,13 +33,13 @@ void execute() {
       rf.write(rt.rd, rf[rt.rs] - rf[rt.rt]);
       break;
     case SP_SLL:
-      rf.write(rt.rd, rf[rt.rt] << rt.sa;
+      rf.write(rt.rd, rf[rt.rt] << rt.sa);
       break;
     case SP_SRL:
-      rf.write(rt.rd, rf[rt.rt] >> rt.sa;
+      rf.write(rt.rd, rf[rt.rt] >> rt.sa);
       break;
     case SP_SRA:
-      rf.write(rt.rd, rf[rt.rt] / (rt.sa*2);
+      rf.write(rt.rd, rf[rt.rt] / (rt.sa*2));
       break;
     case SP_AND:
       rf.write(rt.rd, rf[rt.rs] & rf[rt.rt]);
