@@ -1,2 +1,4 @@
 *.o
-./mipspim
+mipsim
+test*
+_temp
