@@ -64,8 +64,9 @@ void execute() {
       //pc = signExtend16to32ui(rf[rt.rs]);
       break;
     case SP_JALR:
+      jumpTo = signExtend16to32ui(rf[rt.rs]);
+      jump_flag = true;
       rf.write(rt.rd,pc);
-      pc = signExtend16to32ui(rf[rt.rs]);
       break;
     default:
       cout << "Unsupported instruction: ";
