@@ -1,4 +1,5 @@
 #include "mipsim.hpp"
+#include <iostream> //NOT PERMANENT
 
 Stats stats;
 Caches caches(0);
@@ -54,9 +55,16 @@ void execute() {
       rf.write(rt.rd, !(rf[rt.rs] | rf[rt.rt]));
       break;
     case SP_SLT:
-      if(rf[rt.rs] < rf[rt.rt])
+      cout<< "Rf[rt.rs] is" << rf[rt.rs] <<endl;
+      cout<< "Rf[rt.rt] is" << rf[rt.rt] <<endl;
+      if((signed)rf[rt.rs] < (signed)rf[rt.rt]) {
+        cout<<"Determined rs is less than rt (1)" << endl;
         rf.write(rt.rd,1);
-      else rf.write(rt.rd,0);
+      }
+      else {
+         cout<<"Determined rs is not less than rt (0)" << endl;
+         rf.write(rt.rd,0);
+      }
       break;
     case SP_JR:
       jumpTo = signExtend16to32ui(rf[rt.rs]);
