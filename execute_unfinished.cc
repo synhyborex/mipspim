@@ -73,12 +73,11 @@ void execute() {
       }
       break;
     case SP_JR:
-      jumpTo = signExtend16to32ui(rf[rt.rs]);
+      jumpTo = rf[rt.rs];
       jump_flag = true;
-      //pc = signExtend16to32ui(rf[rt.rs]);
       break;
     case SP_JALR:
-      jumpTo = signExtend16to32ui(rf[rt.rs]);
+      jumpTo = rf[rt.rs];
       jump_flag = true;
       rf.write(rt.rd,pc);
       break;
@@ -94,39 +93,37 @@ void execute() {
     rf.write(ri.rt, rf[ri.rs] + signExtend16to32ui(ri.imm));
     break;
   case OP_J:
-    jumpTo = (pc & 0xf0000000 | rj.target << 2);
+    jumpTo = (pc & 0xf0000000) | (rj.target << 2);
     jump_flag = true;
     break;
   case OP_JAL:
-    jumpTo = (pc & 0xf0000000) | rj.target << 2;
+    jumpTo = (pc & 0xf0000000) | (rj.target << 2);
     jump_flag = true;
-    rf.write(31,pc+4);
+    rf.write(31,pc);
     break;
   case OP_BEQ:
     if(rf[ri.rs] == rf[ri.rt]){
       jumpTo = signExtend16to32ui(ri.imm) << 2;
       offset_flag = true;
-      break;
     }
+    break;
   case OP_BNE:
     if(rf[ri.rt] != rf[ri.rs]){
       jumpTo = signExtend16to32ui(ri.imm) << 2;
       offset_flag = true;
-      //break; Add Break, weird error case still
     }
+    break; 
   case OP_BLEZ:
     if((signed)rf[ri.rs] <= 0){
       jumpTo = signExtend16to32ui(ri.imm) << 2;
       offset_flag = true;
-      break;
     }
+    break;
   case OP_SLTI: case OP_SLTIU:
     if((signed)rf[ri.rs] < (signed)signExtend16to32ui(ri.imm)){
-       cout << rf[ri.rs] << " less than " << ri.imm;
        rf.write(ri.rt, 1);
     }
     else {
-       cout << rf[ri.rs] << " not less than " << ri.imm;
        rf.write(ri.rt, 0);
     }
     break;
@@ -142,7 +139,6 @@ void execute() {
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
     rf.write(ri.rt, 0xF000 & dmem[addr]);
-    //rf.write(ri.rt, dmem[addr].data_ubyte4(0));
   case OP_SW:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
