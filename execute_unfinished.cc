@@ -100,7 +100,7 @@ void execute() {
   case OP_JAL:
     jumpTo = (pc & 0xf0000000 | rj.target << 2);
     jump_flag = true;
-    rf.write(rt.rd,pc+8);
+    rf.write(31,pc+4);
     break;
   case OP_BEQ:
     if(rf[ri.rs] == rf[ri.rt]){
