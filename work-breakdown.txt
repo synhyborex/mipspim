@@ -17,13 +17,13 @@ OP_LW
 
 To Implement:
 OP_J (M)
-OP_JAl (B)
+OP_JAl (B) - P
 OP_BEQ (M)
-OP_BNE (B)
+OP_BNE (T)
 OP_BLEZ (M)
 OP_SLTI, OP_SLTIU (M)
-OP_ORI (B)
+OP_ORI (T)
 OP_LUI (M)
-OP_SB (B)
+OP_SB (T)
 OP_LB (M)
-OP_LBU (B)
+OP_LBU (B) - P
