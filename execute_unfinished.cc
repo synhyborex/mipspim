@@ -4,8 +4,8 @@
 Stats stats;
 Caches caches(0);
 unsigned int jumpTo = 0;
-bool jump_register_flag = false;
-bool jump_label_flag = false;
+bool jump_flag = false;
+bool offset_flag = false;
 
 unsigned int signExtend16to32ui(short i) {
   return static_cast<unsigned int>(static_cast<int>(i));
@@ -20,14 +20,14 @@ void execute() {
   unsigned int pctarget = pc + 4;
   unsigned int addr;
   stats.instrs++;
-  if(jump_register_flag){
+  if(jump_flag){ //jump to address
     pc = jumpTo;
-    jump_register_flag = false;
-  }
-  else if(jump_label_flag){
-    pc = jumpTo;
-    jump_label_flag = false;
+    jump_flag = false;
     cout << "pc is " << pc << endl;
+  }
+  else if(offset_flag){
+    pc = pc + jumpTo;
+    offset_flag = false;
   }
   else pc = pctarget;
   switch(rg.op) {
@@ -74,12 +74,12 @@ void execute() {
       break;
     case SP_JR:
       jumpTo = signExtend16to32ui(rf[rt.rs]);
-      jump_register_flag = true;
+      jump_flag = true;
       //pc = signExtend16to32ui(rf[rt.rs]);
       break;
     case SP_JALR:
       jumpTo = signExtend16to32ui(rf[rt.rs]);
-      jump_register_flag = true;
+      jump_flag = true;
       rf.write(rt.rd,pc+4);
       break;
     default:
@@ -94,8 +94,15 @@ void execute() {
     break;
   case OP_JAL:
     jumpTo = (pc & 0xf0000000) | (rf[rj.target] << 2);
-    jump_label_flag = true;
+    jump_flag = true;
     rf.write(rt.rd,pc+8);
+    break;
+  case OP_BNE:
+    if(rf[ri.rt] != rf[ri.rs]){
+      jumpTo = signExtend16to32ui(ri.imm) << 2;
+      offset_flag = true;
+    }
+    break;
   case OP_SW:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
