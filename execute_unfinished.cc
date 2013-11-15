@@ -80,7 +80,7 @@ void execute() {
     case SP_JALR:
       jumpTo = signExtend16to32ui(rf[rt.rs]);
       jump_flag = true;
-      rf.write(rt.rd,pc+4);
+      rf.write(rt.rd,pc);
       break;
     default:
       cout << "Unsupported instruction: ";
@@ -98,7 +98,7 @@ void execute() {
     jump_flag = true;
     break;
   case OP_JAL:
-    jumpTo = (pc & 0xf0000000 | rj.target << 2);
+    jumpTo = (pc & 0xf0000000) | rj.target << 2;
     jump_flag = true;
     rf.write(31,pc+4);
     break;
