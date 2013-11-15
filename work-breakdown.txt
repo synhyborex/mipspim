@@ -19,22 +19,15 @@ To Implement:
 OP_J (M)
 OP_JAl (B) - P
 OP_BEQ (M)
-<<<<<<< HEAD
 OP_BNE (B) <-weird error case
 OP_BLEZ (M)
 OP_SLTI, OP_SLTIU (M) <- "Unreconized opcode"
 OP_ORI (B)
-=======
 OP_BNE (T)
 OP_BLEZ (M)
 OP_SLTI, OP_SLTIU (M)
 OP_ORI (T)
->>>>>>> 8773f09141c0ec039e5026d4f3ae639ae4bdce8b
 OP_LUI (M)
 OP_SB (T)
 OP_LB (M)
-<<<<<<< HEAD
 OP_LBU (B) <- Will do for you
-=======
-OP_LBU (B) - P
->>>>>>> 8773f09141c0ec039e5026d4f3ae639ae4bdce8b
