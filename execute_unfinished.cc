@@ -19,7 +19,6 @@ void execute() {
   JType rj(instr);
   unsigned int pctarget = pc + 4;
   unsigned int addr;
-  unsigned int byteoffset;
   stats.instrs++;
   if(jump_flag){ //jump to address
     pc = jumpTo;
@@ -152,10 +151,8 @@ void execute() {
     break;
   case OP_LB:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
-    byteoffset = addr%4;
-    cout << "ByteOffset: " << byteoffset << endl;
     caches.access(addr);
-    rf.write(ri.rt, dmem[addr]<<8*byteoffset>>8*byteoffset);
+    rf.write(ri.rt, (signed)(0xF000 & dmem[addr]));
     break;
   case OP_LUI:
     rf.write(ri.rt, signExtend16to32ui(ri.imm) << 16);
