@@ -90,6 +90,7 @@ void execute() {
       break;
     }
     break;
+
   case OP_ADDIU: case OP_ADDI:
     rf.write(ri.rt, rf[ri.rs] + signExtend16to32ui(ri.imm));
     break;
@@ -126,6 +127,18 @@ void execute() {
        rf.write(ri.rt, 0);
     }
     break;
+  case OP_ORI:
+    rf.write(ri.rt, rf[ri.rs] | signExtend16to32ui(ri.imm));
+    break;
+  case OP_SB:
+    addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
+    caches.access(addr);
+    dmem.write(addr, 0xFF & rf[ri.rt]);
+    break;
+  case OP_LBU:
+    addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
+    caches.access(addr);
+    rf.write(ri.rt, 0xF000 & dmem[addr]);
   case OP_SW:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
@@ -136,7 +149,7 @@ void execute() {
     caches.access(addr);
     rf.write(ri.rt, dmem[addr]);
     break;
-  case OP_LB: case OP_LBU:
+  case OP_LB:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     byteoffset = addr%4;
     cout << "ByteOffset: " << byteoffset << endl;
