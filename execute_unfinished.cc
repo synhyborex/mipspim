@@ -142,6 +142,7 @@ void execute() {
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
     rf.write(ri.rt, 0xF000 & dmem[addr]);
+    //rf.write(ri.rt, dmem[addr].data_ubyte4(0));
   case OP_SW:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
