@@ -4,7 +4,8 @@
 Stats stats;
 Caches caches(0);
 unsigned int jumpTo = 0;
-bool jump_flag = false;
+bool jump_register_flag = false;
+bool jump_label_flag = false;
 
 unsigned int signExtend16to32ui(short i) {
   return static_cast<unsigned int>(static_cast<int>(i));
@@ -19,9 +20,14 @@ void execute() {
   unsigned int pctarget = pc + 4;
   unsigned int addr;
   stats.instrs++;
-  if(jump_flag){
+  if(jump_register_flag){
     pc = jumpTo;
-    jump_flag = false;
+    jump_register_flag = false;
+  }
+  else if(jump_label_flag){
+    pc = jumpTo;
+    jump_label_flag = false;
+    cout << "pc is " << pc << endl;
   }
   else pc = pctarget;
   switch(rg.op) {
@@ -68,13 +74,13 @@ void execute() {
       break;
     case SP_JR:
       jumpTo = signExtend16to32ui(rf[rt.rs]);
-      jump_flag = true;
+      jump_register_flag = true;
       //pc = signExtend16to32ui(rf[rt.rs]);
       break;
     case SP_JALR:
       jumpTo = signExtend16to32ui(rf[rt.rs]);
-      jump_flag = true;
-      rf.write(rt.rd,pc);
+      jump_register_flag = true;
+      rf.write(rt.rd,pc+4);
       break;
     default:
       cout << "Unsupported instruction: ";
@@ -86,6 +92,10 @@ void execute() {
   case OP_ADDIU: case OP_ADDI:
     rf.write(ri.rt, rf[ri.rs] + signExtend16to32ui(ri.imm));
     break;
+  case OP_JAL:
+    jumpTo = (pc & 0xf0000000) | (rf[rj.target] << 2);
+    jump_label_flag = true;
+    rf.write(rt.rd,pc+8);
   case OP_SW:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
