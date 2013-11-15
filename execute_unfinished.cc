@@ -93,8 +93,12 @@ void execute() {
   case OP_ADDIU: case OP_ADDI:
     rf.write(ri.rt, rf[ri.rs] + signExtend16to32ui(ri.imm));
     break;
+  case OP_J:
+    jumpTo = (pc & 0xf0000000 | rj.target << 2);
+    jump_flag = true;
+    break;
   case OP_JAL:
-    jumpTo = (pc & 0xf0000000) | (rf[rj.target] << 2);
+    jumpTo = (pc & 0xf0000000 | rj.target << 2);
     jump_flag = true;
     rf.write(rt.rd,pc+8);
     break;
