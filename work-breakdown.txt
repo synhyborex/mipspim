@@ -19,11 +19,11 @@ To Implement:
 OP_J (M)
 OP_JAl (B)
 OP_BEQ (M)
-OP_BNE (B)
+OP_BNE (B) <-weird error case
 OP_BLEZ (M)
-OP_SLTI, OP_SLTIU (M)
+OP_SLTI, OP_SLTIU (M) <- "Unreconized opcode"
 OP_ORI (B)
 OP_LUI (M)
 OP_SB (B)
 OP_LB (M)
-OP_LBU (B)
+OP_LBU (B) <- Will do for you

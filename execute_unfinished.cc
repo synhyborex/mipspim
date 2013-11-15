@@ -19,6 +19,7 @@ void execute() {
   JType rj(instr);
   unsigned int pctarget = pc + 4;
   unsigned int addr;
+  unsigned int byteoffset;
   stats.instrs++;
   if(jump_flag){ //jump to address
     pc = jumpTo;
@@ -97,10 +98,32 @@ void execute() {
     jump_flag = true;
     rf.write(rt.rd,pc+8);
     break;
+  case OP_BEQ:
+    if(rf[ri.rs] == rf[ri.rt]){
+      jumpTo = signExtend16to32ui(ri.imm) << 2;
+      offset_flag = true;
+      break;
+    }
   case OP_BNE:
     if(rf[ri.rt] != rf[ri.rs]){
       jumpTo = signExtend16to32ui(ri.imm) << 2;
       offset_flag = true;
+      //break; Add Break, weird error case still
+    }
+  case OP_BLEZ:
+    if((signed)rf[ri.rs] <= 0){
+      jumpTo = signExtend16to32ui(ri.imm) << 2;
+      offset_flag = true;
+      break;
+    }
+  case OP_SLTI: case OP_SLTIU:
+    if((signed)rf[ri.rs] < (signed)signExtend16to32ui(ri.imm)){
+       cout << rf[ri.rs] << " less than " << ri.imm;
+       rf.write(ri.rt, 1);
+    }
+    else {
+       cout << rf[ri.rs] << " not less than " << ri.imm;
+       rf.write(ri.rt, 0);
     }
     break;
   case OP_SW:
@@ -112,6 +135,16 @@ void execute() {
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
     rf.write(ri.rt, dmem[addr]);
+    break;
+  case OP_LB: case OP_LBU:
+    addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
+    byteoffset = addr%4;
+    cout << "ByteOffset: " << byteoffset << endl;
+    caches.access(addr);
+    rf.write(ri.rt, dmem[addr]<<8*byteoffset>>8*byteoffset);
+    break;
+  case OP_LUI:
+    rf.write(ri.rt, signExtend16to32ui(ri.imm) << 16);
     break;
   default:
     cout << "Unsupported instruction: ";
