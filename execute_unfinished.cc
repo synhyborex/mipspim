@@ -156,8 +156,8 @@ void execute() {
     rf.write(ri.rt, (signed)(dmem[addr].data_ubyte4(0)));
     break;
   case OP_LUI:
-    rf.write(ri.rt, rf[ri.rt] & 0x0000FFFF);
-    rf.write(ri.rt, rf[ri.rt] |(ri.imm << 16));
+    rf.write(ri.rt, rf[ri.rt] & 0x0000FFFF); //clear upper bits
+    rf.write(ri.rt, rf[ri.rt] | (ri.imm << 16));
     break;
   default:
     cout << "Unsupported instruction: ";
