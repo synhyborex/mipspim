@@ -153,10 +153,10 @@ void execute() {
   case OP_LB:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
-    rf.write(ri.rt, (signed)(0xFF000000 & dmem[addr]));
+    rf.write(ri.rt, (signed)(dmem[addr].data_ubyte4(0)));
     break;
   case OP_LUI:
-    rf.write(ri.rt, ri.rt | (signExtend16to32ui(ri.imm) << 16));
+    rf.write(ri.rt, (ri.imm << 16));
     break;
   default:
     cout << "Unsupported instruction: ";
