@@ -23,7 +23,7 @@ void execute() {
   if(jump_flag){ //jump to address
     pc = jumpTo;
     jump_flag = false;
-    cout << "pc is " << pc << endl;
+    //cout << "pc is " << pc << endl;
   }
   else if(offset_flag){
     pc = pc + jumpTo;
@@ -61,14 +61,14 @@ void execute() {
       rf.write(rt.rd, !(rf[rt.rs] | rf[rt.rt]));
       break;
     case SP_SLT:
-      cout<< "Rf[rt.rs] is" << rf[rt.rs] <<endl;
-      cout<< "Rf[rt.rt] is" << rf[rt.rt] <<endl;
+     // cout<< "Rf[rt.rs] is" << rf[rt.rs] <<endl;
+     // cout<< "Rf[rt.rt] is" << rf[rt.rt] <<endl;
       if((signed)rf[rt.rs] < (signed)rf[rt.rt]) {
-        cout<<"Determined rs is less than rt (1)" << endl;
+        //cout<<"Determined rs is less than rt (1)" << endl;
         rf.write(rt.rd,1);
       }
       else {
-         cout<<"Determined rs is not less than rt (0)" << endl;
+        // cout<<"Determined rs is not less than rt (0)" << endl;
          rf.write(rt.rd,0);
       }
       break;
@@ -138,7 +138,7 @@ void execute() {
   case OP_LBU:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
-    rf.write(ri.rt, 0xF000 & dmem[addr]);
+    rf.write(ri.rt, 0xFF000000 & dmem[addr]);
   case OP_SW:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
@@ -152,10 +152,10 @@ void execute() {
   case OP_LB:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
-    rf.write(ri.rt, (signed)(0xF000 & dmem[addr]));
+    rf.write(ri.rt, (signed)(0xFF000000 & dmem[addr]));
     break;
   case OP_LUI:
-    rf.write(ri.rt, signExtend16to32ui(ri.imm) << 16);
+    rf.write(ri.rt, ri.rt | (signExtend16to32ui(ri.imm) << 16));
     break;
   default:
     cout << "Unsupported instruction: ";
