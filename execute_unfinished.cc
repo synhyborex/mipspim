@@ -6,6 +6,7 @@ Caches caches(0);
 unsigned int jumpTo = 0;
 bool jump_flag = false;
 bool offset_flag = false;
+int byteOffset = 0;
 
 unsigned int signExtend16to32ui(short i) {
   return static_cast<unsigned int>(static_cast<int>(i));
@@ -138,8 +139,8 @@ void execute() {
   case OP_LBU:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
-    //rf.write(ri.rt, 0xFF000000 & dmem[addr]);
     rf.write(ri.rt, dmem[addr].data_ubyte4(0));
+    break;
   case OP_SW:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
