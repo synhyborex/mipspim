@@ -133,7 +133,7 @@ void execute() {
   case OP_SB:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
-    dmem.write(addr, (0xFF & rf[ri.rt]) << 24);
+    dmem.write(addr, (0xFF & rf[ri.rt]) << 24); //move it to msb
     break;
   case OP_LBU:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
