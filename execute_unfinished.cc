@@ -169,12 +169,12 @@ void execute() {
       offset_flag = true;
     }
     if(offset_flag){ //branch taken
-      if(jumpTo < pc)
+      if(ri.imm > 0)
         stats.numForwardBranchesTaken++;
       else stats.numBackwardBranchesTaken++;
     }
     else{ //branch not taken
-      if(jumpTo < pc)
+      if(ri.imm > 0)
         stats.numForwardBranchesNotTaken++;
       else stats.numBackwardBranchesNotTaken++;
     }
@@ -188,12 +188,12 @@ void execute() {
       offset_flag = true;
     }
     if(offset_flag){ //branch taken
-      if(jumpTo < pc)
+      if(ri.imm > 0)
         stats.numForwardBranchesTaken++;
       else stats.numBackwardBranchesTaken++;
     }
     else{ //branch not taken
-      if(jumpTo < pc)
+      if(ri.imm > 0)
         stats.numForwardBranchesNotTaken++;
       else stats.numBackwardBranchesNotTaken++;
     }
@@ -207,12 +207,12 @@ void execute() {
       offset_flag = true;
     }
     if(offset_flag){ //branch taken
-      if(jumpTo < pc)
+      if(ri.imm > 0)
         stats.numForwardBranchesTaken++;
       else stats.numBackwardBranchesTaken++;
     }
     else{ //branch not taken
-      if(jumpTo < pc)
+      if(ri.imm > 0)
         stats.numForwardBranchesNotTaken++;
       else stats.numBackwardBranchesNotTaken++;
     }
