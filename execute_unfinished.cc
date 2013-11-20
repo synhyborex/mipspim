@@ -37,6 +37,8 @@ unsigned int signExtend16to32ui(short i) {
 }
 
 void execute() {
+  //REMOVE THIS AFTER TEST  
+ // rf.write(18 , 0x400184);
   Data32 instr = imem[pc];
   GenericType rg(instr);
   RType rt(instr);
@@ -112,14 +114,10 @@ void execute() {
       stats.numRegWrites++;
       break;
     case SP_SLT:
-     // cout<< "Rf[rt.rs] is" << rf[rt.rs] <<endl;
-     // cout<< "Rf[rt.rt] is" << rf[rt.rt] <<endl;
       if((signed)rf[rt.rs] < (signed)rf[rt.rt]) {
-        //cout<<"Determined rs is less than rt (1)" << endl;
         rf.write(rt.rd,1);
       }
       else {
-        // cout<<"Determined rs is not less than rt (0)" << endl;
          rf.write(rt.rd,0);
       }
       stats.numRType++;
@@ -135,13 +133,12 @@ void execute() {
     case SP_JALR:
       jumpTo = rf[rt.rs];
       jump_flag = true;
-      rf.write(rt.rd,pc);
+      rf.write(rt.rd,pc + 4);
       stats.numRType++;
       stats.numRegReads++;
       stats.numRegWrites++;
       break;
     default:
-      cout << "Unsupported instruction: ";
       instr.printI(instr);
       exit(1);
       break;
@@ -162,7 +159,7 @@ void execute() {
   case OP_JAL:
     jumpTo = (pc & 0xF0000000) | (rj.target << 2);
     jump_flag = true;
-    rf.write(31,pc);
+    rf.write(31,pc + 4);
     stats.numJType++;
     stats.numRegWrites++;
     break;
@@ -235,7 +232,7 @@ void execute() {
     stats.numRegWrites++;
     break;
   case OP_ORI:
-    rf.write(ri.rt, rf[ri.rs] | signExtend16to32ui(ri.imm));
+    rf.write(ri.rt, rf[ri.rs] | ((signExtend16to32ui(ri.imm)<<16)>>16));
     stats.numIType++;
     stats.numRegReads++;
     stats.numRegWrites++;
