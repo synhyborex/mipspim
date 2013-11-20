@@ -73,7 +73,9 @@ void execute() {
       break;
     case SP_SLL:
       rf.write(rt.rd, rf[rt.rt] << rt.sa);
-      stats.numRType++;
+      if(rt.op) {
+         stats.numRType++;
+      }
       stats.numRegReads++;
       stats.numRegWrites++;
       break;
