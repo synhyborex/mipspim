@@ -6,31 +6,6 @@ Caches caches(0);
 unsigned int jumpTo = 0;
 bool jump_flag = false;
 bool offset_flag = false;
-/*Stats.instrs = 0;
-
-Stats.numMemWrites = 0;
-Stats.numMemReads = 0;
-Stats.numRType = 0;
-Stats.numIType = 0;
-Stats.numJType = 0;
-Stats.numBranches = 0;
-Stats.numRegWrites = 0;
-Stats.numRegReads = 0;
-
-Stats.numForwardBranchesTaken = 0;
-Stats.numForwardBranchesNotTaken = 0;
-Stats.numBackwardBranchesTaken = 0;
-Stats.numBackwardBranchesNotTaken = 0;
-
-Stats.hasUsefulBranchDelaySlot = 0;
-Stats.hasUselessBranchDelaySlot = 0;
-
-Stats.hasUsefulJumpDelaySlot = 0;
-Stats.hasUselessJumpDelaySlot = 0;
-
-Stats.loadHasLoadUseHazard = 0;
-Stats.loadHasLoadUseStall = 0;
-Stats.loadHasNoLoadUseHazard = 0;*/
 
 unsigned int signExtend16to32ui(short i) {
   return static_cast<unsigned int>(static_cast<int>(i));
@@ -74,7 +49,7 @@ void execute() {
     case SP_SLL:
       rf.write(rt.rd, rf[rt.rt] << rt.sa);
       if(rt.op) {
-         stats.numRType++;
+        stats.numRType++;
       }
       stats.numRegReads++;
       stats.numRegWrites++;
@@ -86,7 +61,7 @@ void execute() {
       stats.numRegWrites++;
       break;
     case SP_SRA:
-      rf.write(rt.rd, rf[rt.rt] / (rt.sa*2));
+      rf.write(rt.rd, (signed)rf[rt.rt] >> rt.sa);
       stats.numRType++;
       stats.numRegReads++;
       stats.numRegWrites++;

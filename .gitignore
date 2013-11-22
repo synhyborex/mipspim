@@ -1,4 +1,7 @@
 *.o
 mipsim
+fib
+shang
+*.sim
 test*
 _temp
