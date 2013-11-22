@@ -85,7 +85,7 @@ void execute() {
       stats.numRegWrites++;
       break;
     case SP_NOR:
-      rf.write(rt.rd, !(rf[rt.rs] | rf[rt.rt]));
+      rf.write(rt.rd, ~(rf[rt.rs] | rf[rt.rt]));
       stats.numRType++;
       stats.numRegReads += 2;
       stats.numRegWrites++;
