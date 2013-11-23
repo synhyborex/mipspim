@@ -361,6 +361,7 @@ public:
 class Stats {
 public:
   unsigned int instrs;
+  unsigned int cycles;
 
   unsigned int numMemWrites;
   unsigned int numMemReads;

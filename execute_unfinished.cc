@@ -6,14 +6,13 @@ Caches caches(0);
 unsigned int jumpTo = 0;
 bool jump_flag = false;
 bool offset_flag = false;
+bool lastInstrBranch = false;
 
 unsigned int signExtend16to32ui(short i) {
   return static_cast<unsigned int>(static_cast<int>(i));
 }
 
 void execute() {
-  //REMOVE THIS AFTER TEST  
- // rf.write(18 , 0x400184);
   Data32 instr = imem[pc];
   GenericType rg(instr);
   RType rt(instr);
@@ -22,15 +21,32 @@ void execute() {
   unsigned int pctarget = pc + 4;
   unsigned int addr;
   stats.instrs++;
+  stats.cycles++;
   if(jump_flag){ //jump to address
+    //check jump delay slot
+    if(rg.op){
+      stats.hasUsefulJumpDelaySlot++;
+    }
+    else stats.hasUselessJumpDelaySlot++;
+
     pc = jumpTo;
     jump_flag = false;
   }
-  else if(offset_flag){
+  else if(offset_flag){ //branched true
     pc = pc + jumpTo;
     offset_flag = false;
   }
   else pc = pctarget;
+
+  //check branch delay slots
+  if(lastInstrBranch){
+    if(rg.op){
+      stats.hasUsefulBranchDelaySlot++;
+    }
+    else stats.hasUselessBranchDelaySlot++;
+    lastInstrBranch = false;
+  }
+
   switch(rg.op) {
   case OP_SPECIAL:
     switch(rg.func) {
@@ -48,8 +64,11 @@ void execute() {
       break;
     case SP_SLL:
       rf.write(rt.rd, rf[rt.rt] << rt.sa);
-      if(rt.op) {
+      if(rt.op) { //valid sll
         stats.numRType++;
+      }
+      else{ //no-op
+        stats.instrs--;
       }
       stats.numRegReads++;
       stats.numRegWrites++;
@@ -85,7 +104,7 @@ void execute() {
       stats.numRegWrites++;
       break;
     case SP_NOR:
-      rf.write(rt.rd, ~(rf[rt.rs] | rf[rt.rt]));
+      rf.write(rt.rd, !(rf[rt.rs] | rf[rt.rt]));
       stats.numRType++;
       stats.numRegReads += 2;
       stats.numRegWrites++;
@@ -155,6 +174,7 @@ void execute() {
         stats.numForwardBranchesNotTaken++;
       else stats.numBackwardBranchesNotTaken++;
     }
+    lastInstrBranch = true;
     stats.numIType++;
     stats.numBranches++;
     stats.numRegReads += 2;
@@ -174,6 +194,7 @@ void execute() {
         stats.numForwardBranchesNotTaken++;
       else stats.numBackwardBranchesNotTaken++;
     }
+    lastInstrBranch = true;
     stats.numIType++;
     stats.numBranches++;
     stats.numRegReads += 2;
@@ -193,6 +214,7 @@ void execute() {
         stats.numForwardBranchesNotTaken++;
       else stats.numBackwardBranchesNotTaken++;
     }
+    lastInstrBranch = true;
     stats.numIType++;
     stats.numBranches++;
     stats.numRegReads++;
