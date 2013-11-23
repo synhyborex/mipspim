@@ -83,7 +83,6 @@ void Stats::print() {
   cout << dec
        << "Total number of dynamic instructions: " << instrs << endl
        << "Total number of cycles: " << cycles << endl
-       << "Total number of branches: " << numBranches << endl
        << "  RType: " << numRType << endl
        << "  IType: " << numIType << endl
        << "  JType: " << numJType << endl
