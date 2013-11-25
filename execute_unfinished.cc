@@ -280,7 +280,7 @@ void execute() {
     stats.numRegWrites++;
     break;
   case OP_LUI:
-    rf.write(ri.rt, rf[ri.rt] & 0x0000FFFF); //clear upper bits
+    //rf.write(ri.rt, rf[ri.rt] & 0x0000FFFF); //clear upper bits
     rf.write(ri.rt, rf[ri.rt] | (ri.imm << 16));
     stats.numIType++;
     stats.numRegReads++;
