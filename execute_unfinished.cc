@@ -217,7 +217,7 @@ void execute() {
     lastInstrBranch = true;
     stats.numIType++;
     stats.numBranches++;
-    stats.numRegReads++;
+    stats.numRegReads += 2;
     break;
   case OP_SLTI: case OP_SLTIU:
     if((signed)rf[ri.rs] < (signed)signExtend16to32ui(ri.imm)){
@@ -242,7 +242,7 @@ void execute() {
     dmem.write(addr, (0xFF & rf[ri.rt]) << 24); //move it to msb
     stats.numIType++;
     stats.numMemWrites++;
-    stats.numRegReads++;
+    stats.numRegReads += 2;
     break;
   case OP_LBU:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
@@ -259,7 +259,7 @@ void execute() {
     dmem.write(addr, rf[ri.rt]);
     stats.numIType++;
     stats.numMemWrites++;
-    stats.numRegReads++;
+    stats.numRegReads += 2;
     break;
   case OP_LW:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
