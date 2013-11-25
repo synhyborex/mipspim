@@ -2,6 +2,7 @@
 mipsim
 fib
 shang
+bytecheck
 *.sim
 test*
 _temp
