@@ -76,7 +76,69 @@ void Memory<Data32, Data32>::dump(DataType dt) const {
 // cache size in blocks). You should also update the "hits" and
 // "misses" counters.
 bool Cache::access(unsigned int address) {
-  return false;
+  //address is 32 bits
+  //size is number of lines
+  //blocksize is line size
+  //total size of cache = blocksize*size
+
+  //number of bits in address for each
+  unsigned int byteSelectBits = 0;
+  unsigned int indexBits = 0;
+  unsigned int tagBits = 0;
+
+  //these will be the versions that get changed
+  unsigned int shiftBlocksize = blocksize;
+  unsigned int shiftSize = size;
+
+  //figure out how many bits we need in the address
+  //byte select
+  while(shiftBlocksize != 1){
+    shiftBlocksize = shiftBlocksize >> 1;
+    byteSelectBits++;
+  }
+  //index
+  while(shiftSize != 1){
+    shiftSize = shiftSize >> 1;
+    indexBits++;
+  }
+  //tag
+  tagBits = sizeof(address) - byteSelectBits - indexBits;
+
+  /*pull out the right bits*/
+  unsigned int addr = address;
+  //byte select
+  addr >>= byteSelectBits; //we don't need the "data", shift it off
+
+  //index
+  unsigned int indexMask = 0; //the mask to pull out the index bits
+  for(int i = 0; i < indexBits; i++){
+    indexMask <<= 1;
+    indexMask++; //add another hex 'F' to the mask
+  }
+  unsigned int cacheIndex = indexMask & addr; //the index in the cache
+
+  //tag
+  addr >>= indexBits; //shift off index bits now, leaving only the tag
+
+  //check if the cache contains the tag
+  if(entries[cacheIndex] == addr){ //success
+    hits++;
+    return true;
+  }
+  else{ //failure
+    misses++;
+    entries[cacheIndex] = addr;
+    return false;
+  }
+
+  //cout << "test is " << test2 << endl;
+  /*cout << "\ncache size is " << size << endl;
+  cout << "cache line size is " << blocksize << endl;
+  cout << "byte select bits: " << byteSelectBits << endl;
+  cout << "index bits: " << indexBits << endl;
+  cout << "tag bits: " << tagBits << endl;
+  cout << "address size: " << sizeof(address) << endl;
+  cout << "test: " << 15 << endl;*/
 }
 
 void Stats::print() {
