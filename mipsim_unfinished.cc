@@ -77,9 +77,9 @@ void Memory<Data32, Data32>::dump(DataType dt) const {
 // "misses" counters.
 bool Cache::access(unsigned int address) {
   //address is 32 bits
-  //size is number of lines
+  //size is total size of cache
   //blocksize is line size
-  //total size of cache = blocksize*size
+  //# lines = size / blocksize
 
   //number of bits in address for each
   unsigned int byteSelectBits = 0;
@@ -88,7 +88,7 @@ bool Cache::access(unsigned int address) {
 
   //these will be the versions that get changed
   unsigned int shiftBlocksize = blocksize;
-  unsigned int shiftSize = size;
+  unsigned int shiftSize = size/blocksize;
 
   //figure out how many bits we need in the address
   //byte select
@@ -102,7 +102,7 @@ bool Cache::access(unsigned int address) {
     indexBits++;
   }
   //tag
-  tagBits = sizeof(address) - byteSelectBits - indexBits;
+  tagBits = sizeof(address)*8 - byteSelectBits - indexBits;
 
   /*pull out the right bits*/
   unsigned int addr = address;
@@ -116,9 +116,20 @@ bool Cache::access(unsigned int address) {
     indexMask++; //add another hex 'F' to the mask
   }
   unsigned int cacheIndex = indexMask & addr; //the index in the cache
+  /*cout << entries.size()+10 << endl;
+  cout << "cache line size is " << blocksize << endl;
+  cout << "address size: " << sizeof(address) << endl;
+  cout << "byte select bits: " << byteSelectBits << endl;
+  cout << "index bits: " << indexBits << endl;
+  cout << "tag bits: " << tagBits << endl;
+  cout << address << endl;
+  cout << indexMask << endl;
+  cout << addr << endl;
+  cout << cacheIndex << endl;*/
 
   //tag
   addr >>= indexBits; //shift off index bits now, leaving only the tag
+  //cout << addr << endl;
 
   //check if the cache contains the tag
   if(entries[cacheIndex] == addr){ //success
@@ -139,6 +150,7 @@ bool Cache::access(unsigned int address) {
   cout << "tag bits: " << tagBits << endl;
   cout << "address size: " << sizeof(address) << endl;
   cout << "test: " << 15 << endl;*/
+  //return false;
 }
 
 void Stats::print() {

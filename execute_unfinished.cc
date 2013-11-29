@@ -231,7 +231,8 @@ void execute() {
     stats.numRegWrites++;
     break;
   case OP_ORI:
-    rf.write(ri.rt, rf[ri.rs] | ((signExtend16to32ui(ri.imm)<<16)>>16));
+    //rf.write(ri.rt, rf[ri.rs] | ((signExtend16to32ui(ri.imm)<<16)>>16));
+    rf.write(ri.rt, rf[ri.rs] | signExtend16to32ui(ri.imm));
     stats.numIType++;
     stats.numRegReads++;
     stats.numRegWrites++;
