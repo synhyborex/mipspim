@@ -45,7 +45,7 @@ void execute() {
     }
     else stats.hasUselessBranchDelaySlot++;
     lastInstrBranch = false;
-  }
+  } 
 
   switch(rg.op) {
   case OP_SPECIAL:

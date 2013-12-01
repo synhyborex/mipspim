@@ -75,7 +75,7 @@ void Memory<Data32, Data32>::dump(DataType dt) const {
 // you make this decision are "blocksize" (in bytes) and "size" (total
 // cache size in blocks). You should also update the "hits" and
 // "misses" counters.
-bool Cache::access(unsigned int address) {
+bool Cache::access(unsigned int address) { 
   //address is 32 bits
   //size is total size of cache
   //blocksize is line size

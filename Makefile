@@ -5,7 +5,7 @@ OBJS            = $(SRCS:.cc=.o)
 srcdir          = .
 INCLUDES	= -I$(srcdir)
 # CXXFLAGS          = -g
-CXXFLAGS        = -O0
+CXXFLAGS        = -O3
 LDFLAGS		= 
 LIBS		= -lstdc++
 

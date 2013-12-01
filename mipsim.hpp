@@ -316,7 +316,7 @@ private:
   unsigned int blocksize;
   vector<unsigned int> entries;
   unsigned int hits;
-  unsigned int misses;
+  unsigned int misses; 
 public:
   Cache(unsigned int _size, unsigned int _blocksize) :
     size(_size), blocksize(_blocksize), entries(_size / _blocksize, 0),
