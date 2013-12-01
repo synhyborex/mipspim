@@ -371,6 +371,9 @@ public:
   unsigned int numBranches;
   unsigned int numRegWrites;
   unsigned int numRegReads;
+  
+  unsigned int forwardsFromExec;
+  unsigned int forwardsFromMem;
 
   unsigned int numForwardBranchesTaken;
   unsigned int numForwardBranchesNotTaken;
