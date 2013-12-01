@@ -192,6 +192,7 @@ void execute() {
       cout << "NOP" << endl;
    }
 */
+/*
  //Check for Load Use Hazard
  //If instruction is a Load
    if(I_L(instr)) {
@@ -612,7 +613,7 @@ void execute() {
          }
       }
    }
-
+*/
   switch(rg.op) {
   case OP_SPECIAL:
     switch(rg.func) {
