@@ -630,11 +630,11 @@ void execute() {
       break;
     case SP_SLL:
       rf.write(rt.rd, rf[rt.rt] << rt.sa);
-      if(rt.op) { //valid sll
-        stats.numRType++;
-      }
-      else{ //no-op
+      if(rt.rs == rt.rt == rt.rd == rt.sa) { //no-op
         stats.instrs--;
+      }
+      else{ //valid sll
+        stats.numRType++;
       }
       stats.numRegReads++;
       stats.numRegWrites++;
@@ -695,7 +695,7 @@ void execute() {
     case SP_JALR:
       jumpTo = rf[rt.rs];
       jump_flag = true;
-      rf.write(rt.rd,pc + 4);
+      rf.write(31,pc + 4);
       stats.numRType++;
       stats.numRegReads++;
       stats.numRegWrites++;
