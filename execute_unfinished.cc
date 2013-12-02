@@ -192,7 +192,7 @@ void execute() {
       cout << "NOP" << endl;
    }
 */
-/*
+
  //Check for Load Use Hazard
  //If instruction is a Load
    if(I_L(instr)) {
@@ -613,7 +613,7 @@ void execute() {
          }
       }
    }
-*/
+
   switch(rg.op) {
   case OP_SPECIAL:
     switch(rg.func) {
@@ -632,6 +632,7 @@ void execute() {
     case SP_SLL:
       rf.write(rt.rd, rf[rt.rt] << rt.sa);
       if(rt.rs == rt.rt == rt.rd == rt.sa) { //no-op
+       // cout << "no ops in SLL" << endl;
         stats.instrs--;
       }
       else{ //valid sll
@@ -641,13 +642,13 @@ void execute() {
       stats.numRegWrites++;
       break;
     case SP_SRL:
-      rf.write(rt.rd, rf[rt.rt] >> rt.sa);
+      rf.write(rt.rd, static_cast<unsigned int>(rf[rt.rt]) >> rt.sa);
       stats.numRType++;
       stats.numRegReads++;
       stats.numRegWrites++;
       break;
     case SP_SRA:
-      rf.write(rt.rd, (signed)rf[rt.rt] >> rt.sa);
+      rf.write(rt.rd, static_cast<int>(rf[rt.rt]) >> rt.sa);
       stats.numRType++;
       stats.numRegReads++;
       stats.numRegWrites++;
@@ -677,24 +678,19 @@ void execute() {
       stats.numRegWrites++;
       break;
     case SP_SLT:
-      if((signed)rf[rt.rs] < (signed)rf[rt.rt]) {
-        rf.write(rt.rd,1);
-      }
-      else {
-         rf.write(rt.rd,0);
-      }
+      rf.write(rt.rd, rf[rt.rs] < rf[rt.rt] ? 1 : 0);
       stats.numRType++;
       stats.numRegReads += 2;
       stats.numRegWrites++;
       break;
     case SP_JR:
-      jumpTo = rf[rt.rs];
+      jumpTo = static_cast<unsigned int>(rf[rt.rs]);
       jump_flag = true;
       stats.numRType++;
       stats.numRegReads++;
       break;
     case SP_JALR:
-      jumpTo = rf[rt.rs];
+      jumpTo = static_cast<unsigned int>(rf[rt.rs]);
       jump_flag = true;
       rf.write(31,pc + 4);
       stats.numRType++;
@@ -767,7 +763,7 @@ void execute() {
     stats.numRegReads += 2;
     break; 
   case OP_BLEZ:
-    if((signed)rf[ri.rs] <= 0){
+    if(rf[ri.rs] <= 0){
       jumpTo = signExtend16to32ui(ri.imm) << 2;
       offset_flag = true;
     }
@@ -787,18 +783,12 @@ void execute() {
     stats.numRegReads += 2;
     break;
   case OP_SLTI: case OP_SLTIU:
-    if((signed)rf[ri.rs] < (signed)signExtend16to32ui(ri.imm)){
-       rf.write(ri.rt, 1);
-    }
-    else {
-       rf.write(ri.rt, 0);
-    }
+    rf.write(ri.rt, rf[ri.rs] < signExtend16to32ui(ri.imm) ? 1 : 0);
     stats.numIType++;
     stats.numRegReads++;
     stats.numRegWrites++;
     break;
   case OP_ORI:
-    //rf.write(ri.rt, rf[ri.rs] | ((signExtend16to32ui(ri.imm)<<16)>>16));
     rf.write(ri.rt, rf[ri.rs] | signExtend16to32ui(ri.imm));
     stats.numIType++;
     stats.numRegReads++;
@@ -848,9 +838,9 @@ void execute() {
     stats.numRegWrites++;
     break;
   case OP_LUI:
-    //rf.write(ri.rt, rf[ri.rt] & 0x0000FFFF); //clear upper bits
-    rf.write(ri.rt, rf[ri.rt] | (ri.imm << 16));
-    rf.write(ri.rt, rf[ri.rt] & 0xFFFF0000); //clear lower bits
+    //rf.write(ri.rt, rf[ri.rt] | (ri.imm << 16));
+    //rf.write(ri.rt, rf[ri.rt] & 0xFFFF0000); //clear lower bits
+    rf.write(ri.rt, signExtend16to32ui(ri.imm) << 16);
     stats.numIType++;
     stats.numRegReads++;
     stats.numRegWrites++;
