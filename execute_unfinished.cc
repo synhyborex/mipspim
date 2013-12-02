@@ -132,6 +132,7 @@ void execute() {
 
   unsigned int pctarget = pc + 4;
   unsigned int addr;
+  Data32 temp = NULL;
   stats.instrs++;
   stats.cycles++;
   if(jump_flag){ //jump to address
@@ -797,7 +798,10 @@ void execute() {
   case OP_SB:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
-    dmem.write(addr, (0xFF & rf[ri.rt]) << 24); //move it to msb
+    temp = dmem[addr];
+    temp.set_data_ubyte4(0, rf[ri.rt] & 0xFF);
+    dmem.write(addr, temp);
+    //dmem.write(addr, (0xFF & rf[ri.rt]) << 24); //move it to msb
     stats.numIType++;
     stats.numMemWrites++;
     stats.numRegReads += 2;
@@ -805,7 +809,7 @@ void execute() {
   case OP_LBU:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
-    rf.write(ri.rt, dmem[addr].data_ubyte4(0));
+    rf.write(ri.rt, static_cast<int>(dmem[addr].data_ubyte4(0)) & 0xFF);
     stats.numIType++;
     stats.numMemReads++;
     stats.numRegReads++;
@@ -831,7 +835,7 @@ void execute() {
   case OP_LB:
     addr = rf[ri.rs] + signExtend16to32ui(ri.imm);
     caches.access(addr);
-    rf.write(ri.rt, (signed)(dmem[addr].data_ubyte4(0)));
+    rf.write(ri.rt, static_cast<int>(dmem[addr].data_ubyte4(0)));
     stats.numIType++;
     stats.numMemReads++;
     stats.numRegReads++;
